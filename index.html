@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sample: Competitor + Positioning Audit — B2B Workflow Collaboration Tool (Redacted)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #1d4ed8;
+      --blue-light: #eff6ff;
+      --blue-border: #bfdbfe;
+      --dark: #111827;
+      --mid: #374151;
+      --muted: #6b7280;
+      --light: #f9fafb;
+      --border: #e5e7eb;
+      --green: #15803d;
+      --green-light: #f0fdf4;
+      --red: #b91c1c;
+      --red-light: #fef2f2;
+      --orange: #c2410c;
+      --orange-light: #fff7ed;
+      --yellow: #a16207;
+      --yellow-light: #fefce8;
+      --radius: 8px;
+      --max: 900px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--dark);
+      background: #f3f4f6;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Layout ─────────────────────────────────── */
+    .page { max-width: var(--max); margin: 0 auto; padding: 24px 16px 64px; }
+
+    /* ── Document header ─────────────────────────── */
+    .doc-header {
+      background: var(--dark);
+      color: #fff;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 28px 32px 24px;
+    }
+    .doc-header .doc-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    .doc-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .doc-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 13px;
+      color: #d1d5db;
+    }
+    .doc-meta span strong { color: #fff; margin-right: 4px; }
+
+    /* ── Disclaimer banner ───────────────────────── */
+    .disclaimer {
+      background: var(--blue-light);
+      border: 1px solid var(--blue-border);
+      border-top: none;
+      padding: 12px 20px;
+      font-size: 13px;
+      color: var(--blue);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .disclaimer .icon { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Body card ───────────────────────────────── */
+    .body-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      overflow: hidden;
+    }
+
+    /* ── Sections ────────────────────────────────── */
+    .section {
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-child { border-bottom: none; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .section-number {
+      background: var(--dark);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Executive summary ───────────────────────── */
+    .diagnosis-box {
+      background: var(--red-light);
+      border: 1px solid #fecaca;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .diagnosis-box .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+    .diagnosis-box p { font-size: 14px; color: var(--mid); }
+
+    .quotes-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .quote-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 13.5px;
+    }
+    .quote-row .brand {
+      font-weight: 700;
+      min-width: 68px;
+      color: var(--muted);
+      font-size: 12px;
+      padding-top: 2px;
+    }
+    .quote-row .text { color: var(--mid); font-style: italic; }
+
+    .position-rec {
+      background: var(--green-light);
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .position-rec .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .pos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+      font-size: 13.5px;
+    }
+    .pos-grid div { display: flex; gap: 6px; }
+    .pos-grid .pos-key { font-weight: 600; color: var(--mid); white-space: nowrap; }
+    .pos-grid .pos-val { color: var(--dark); }
+
+    .action-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .action-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+    .action-list .num {
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Scorecard ───────────────────────────────── */
+    .scorecard-total {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .scorecard-total .big { font-size: 36px; font-weight: 800; color: var(--orange); }
+    .scorecard-total .denom { font-size: 20px; color: var(--muted); }
+    .scorecard-total .label { font-size: 13px; color: var(--muted); margin-left: 4px; }
+
+    .score-rows { display: flex; flex-direction: column; gap: 14px; }
+    .score-row { display: grid; grid-template-columns: 130px 1fr 36px; align-items: center; gap: 12px; }
+    .score-row .dim { font-size: 13px; font-weight: 600; color: var(--mid); }
+    .score-bar-wrap { background: #e5e7eb; border-radius: 99px; height: 8px; overflow: hidden; }
+    .score-bar { height: 100%; border-radius: 99px; }
+    .score-val { font-size: 13px; font-weight: 700; text-align: right; }
+    .score-rubric { grid-column: 2 / 4; font-size: 12px; color: var(--muted); margin-top: -6px; }
+
+    /* color by score */
+    .bar-low  { background: #ef4444; }
+    .bar-mid  { background: #f59e0b; }
+    .bar-ok   { background: #22c55e; }
+
+    .score-fix-note {
+      margin-top: 18px;
+      background: var(--orange-light);
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--orange);
+    }
+    .score-fix-note strong { color: var(--dark); }
+
+    /* ── Competitor table ────────────────────────── */
+    .note-banner {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .comp-table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      background: var(--light);
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    tbody td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+    tbody tr:nth-child(even) td { background: var(--light); }
+    .comp-name { font-weight: 700; color: var(--dark); }
+    .comp-narrative { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .comp-quote { font-style: italic; color: var(--mid); }
+    .comp-risk {
+      font-size: 12px;
+      color: var(--red);
+      background: var(--red-light);
+      border-radius: 4px;
+      padding: 3px 6px;
+      display: inline-block;
+    }
+
+    .market-reality {
+      margin-top: 16px;
+      background: var(--yellow-light);
+      border: 1px solid #fef08a;
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: var(--yellow);
+    }
+    .market-reality strong { color: var(--dark); }
+
+    /* ── Positioning options ─────────────────────── */
+    .options-grid { display: flex; flex-direction: column; gap: 14px; }
+    .option-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .option-card.recommended { border-color: var(--blue); }
+    .option-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 16px;
+      background: var(--light);
+      border-bottom: 1px solid var(--border);
+    }
+    .option-card.recommended .option-header {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+    .option-card.recommended .option-letter,
+    .option-card.recommended .option-title { color: #fff; }
+    .option-letter {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .option-title { font-size: 14px; font-weight: 700; color: var(--dark); }
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: #fff;
+      color: var(--blue);
+      border-radius: 99px;
+      padding: 2px 8px;
+    }
+    .option-body {
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 20px;
+      font-size: 13px;
+    }
+    .option-row { display: flex; flex-direction: column; gap: 2px; }
+    .option-key { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+    .option-val { color: var(--mid); }
+    .option-val strong { color: var(--dark); }
+
+    /* ── Copy assets ─────────────────────────────── */
+    .asset-group { margin-bottom: 22px; }
+    .asset-group:last-child { margin-bottom: 0; }
+    .asset-group h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .headlines-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .headline-item {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-size: 13.5px;
+      color: var(--mid);
+    }
+    .headline-item .hn { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+
+    .subhead-list, .cta-list { display: flex; flex-direction: column; gap: 7px; }
+    .subhead-item, .cta-item {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-size: 13.5px;
+      color: var(--mid);
+    }
+    .cta-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cta-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--blue);
+      background: var(--blue-light);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .ba-box {
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-size: 13.5px;
+    }
+    .ba-box.before { background: var(--red-light); border: 1px solid #fecaca; }
+    .ba-box.after  { background: var(--green-light); border: 1px solid #bbf7d0; }
+    .ba-box .ba-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .ba-box.before .ba-label { color: var(--red); }
+    .ba-box.after  .ba-label { color: var(--green); }
+    .ba-box p { color: var(--mid); }
+
+    /* ── Objections ──────────────────────────────── */
+    .objection-list { display: flex; flex-direction: column; gap: 14px; }
+    .objection-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .obj-q {
+      background: var(--light);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--mid);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .obj-q .q-icon { color: var(--muted); font-size: 13px; }
+    .obj-a {
+      padding: 10px 14px;
+      font-size: 13.5px;
+      color: var(--mid);
+    }
+
+    /* ── 14-day plan ─────────────────────────────── */
+    .plan-weeks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .plan-week {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .plan-week-header {
+      background: var(--dark);
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .plan-days { padding: 12px 14px; display: flex; flex-direction: column; gap: 7px; }
+    .plan-day {
+      display: flex;
+      gap: 8px;
+      font-size: 13px;
+      align-items: flex-start;
+    }
+    .plan-day .day-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .plan-day .day-task { color: var(--mid); }
+
+    /* ── Done-for-you asset ──────────────────────── */
+    .dfy-card {
+      background: var(--blue-light);
+      border: 1px solid var(--blue-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .dfy-header {
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .dfy-body { padding: 16px; }
+    .dfy-field { margin-bottom: 12px; }
+    .dfy-field:last-child { margin-bottom: 0; }
+    .dfy-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--blue); margin-bottom: 4px; }
+    .dfy-content {
+      font-size: 15px;
+      color: var(--dark);
+      background: #fff;
+      border: 1px solid var(--blue-border);
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+    .dfy-content.headline { font-weight: 700; font-size: 18px; }
+    .dfy-cta-wrap { display: flex; gap: 8px; align-items: center; }
+    .dfy-cta-pill {
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 6px;
+    }
+    .dfy-options-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+    /* ── Loom outline ────────────────────────────── */
+    .loom-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .loom-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+    .loom-list .ts {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .loom-list .desc { color: var(--mid); }
+    .loom-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+    }
+
+    /* ── Footer ──────────────────────────────────── */
+    .doc-footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 620px) {
+      .section { padding: 20px 18px; }
+      .doc-header { padding: 20px 18px 18px; }
+      .pos-grid, .option-body, .plan-weeks, .before-after, .headlines-grid { grid-template-columns: 1fr; }
+      .score-row { grid-template-columns: 110px 1fr 32px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Document header ─────────────────────────── -->
+  <div class="doc-header">
+    <div class="doc-label">Sample Deliverable — Format + Depth Example</div>
+    <h1>Competitor + Positioning Audit<br>B2B Workflow Collaboration Tool <span style="font-weight:400;color:#9ca3af;font-size:16px">(Redacted)</span></h1>
+    <div class="doc-meta">
+      <span><strong>Client type:</strong> B2B SaaS — Workflow Collaboration</span>
+      <span><strong>Identity:</strong> Removed on purpose</span>
+      <span><strong>Completed:</strong> 2026-02-18</span>
+      <span><strong>Analyst:</strong> Alex</span>
+      <span><strong>Format:</strong> $149 fixed-scope snapshot</span>
+    </div>
+  </div>
+
+  <!-- ── Disclaimer ─────────────────────────────── -->
+  <div class="disclaimer">
+    <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="7.25" stroke="#2563eb" stroke-width="1.5"/>
+      <path d="M8 5v4M8 10.5v.5" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <strong>This is a redacted sample</strong> — it shows the exact format and depth of a real audit, with the client name and domain removed.
+      It is not a claim that a household-name brand purchased this service.
+      In a paid audit, screenshots of each competitor's homepage are included in Section 3.
+    </div>
+  </div>
+
+  <!-- ── Body ───────────────────────────────────── -->
+  <div class="body-card">
+
+    <!-- §1 Executive Summary -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <div>
+          <div class="section-title">Executive Summary</div>
+          <div class="section-subtitle">Read this first — 60-second version of everything that follows</div>
+        </div>
+      </div>
+
+      <div class="diagnosis-box">
+        <div class="label">Diagnosis</div>
+        <p>Your homepage reads like a generic "async collaboration" tool. In this category, that makes you interchangeable — so prospects default to the incumbent (Teams, Zoom, Notion) or whoever they already know.</p>
+      </div>
+
+      <p style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">What the market is actually rewarding (real competitor hero claims)</p>
+      <div class="quotes-grid" style="margin-bottom:20px;">
+        <div class="quote-row"><span class="brand">Loom</span><span class="text">"One video is worth a thousand words" — productivity framing, aspirational, household recognition</span></div>
+        <div class="quote-row"><span class="brand">Vidyard</span><span class="text">"Sellers win more deals with Vidyard" — outcome-first, revenue-adjacent, owns the sales lane</span></div>
+        <div class="quote-row"><span class="brand">Zight</span><span class="text">"One tool to record, share, and explain your work so your team stays aligned and moves faster" — bundled workflow claim</span></div>
+        <div class="quote-row"><span class="brand">Vimeo</span><span class="text">"Your complete video platform" — enterprise trust, hosting, controls</span></div>
+        <div class="quote-row"><span class="brand">Bubbles</span><span class="text">"Notetaker automatically joins your meetings to record, transcribe, and take notes" — AI meeting assistant</span></div>
+      </div>
+
+      <div class="position-rec">
+        <div class="label">Recommended positioning (Option A — see Section 4 for full options)</div>
+        <div class="pos-grid">
+          <div><span class="pos-key">Buyer:</span><span class="pos-val">PM + Eng leads managing cross-functional handoffs</span></div>
+          <div><span class="pos-key">Painful moment:</span><span class="pos-val">Work is blocked because context is missing; threads get ambiguous; meetings add days of latency</span></div>
+          <div><span class="pos-key">Promise:</span><span class="pos-val"><strong>"Unblock work and ship faster without scheduling more meetings."</strong></span></div>
+          <div><span class="pos-key">Mechanism:</span><span class="pos-val">Short in-context walkthroughs + threaded decisions + searchable proof trail</span></div>
+        </div>
+      </div>
+
+      <p style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Top 3 high-leverage changes to ship this week</p>
+      <ul class="action-list">
+        <li>
+          <span class="num">1</span>
+          <span>Replace the hero with a "blocked-work" promise + mechanism. Stop selling "video" or "async" — those are tools, not outcomes. See Section 5 for copy/paste headline options.</span>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <span>Add one proof asset that matches the promise — cycle time reduction, handoff speed, review loop data. Without proof, the claim lands as another generic pitch.</span>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <span>Add a workflow page showing exactly when to use the product. Adoption risk ("another tool nobody uses") is the primary objection — a clear use-case page neutralizes it.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- §2 Scorecard -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <div>
+          <div class="section-title">Positioning Scorecard</div>
+          <div class="section-subtitle">Each dimension has a rubric so you know exactly what moves the score</div>
+        </div>
+      </div>
+
+      <div class="scorecard-total">
+        <span class="big">26</span>
+        <span class="denom">/ 50</span>
+        <span class="label">— Competitive positioning is the primary growth constraint</span>
+      </div>
+
+      <div class="score-rows">
+        <div class="score-row">
+          <div class="dim">Clarity</div>
+          <div class="score-bar-wrap"><div class="score-bar bar-mid" style="width:60%"></div></div>
+          <div class="score-val" style="color:var(--yellow)">6</div>
+          <div class="score-rubric">Can a stranger explain what you do in 5 seconds from your homepage? Partial — "async video" is understood, but the specific use-case is not clear.</div>
+        </div>
+        <div class="score-row">
+          <div class="dim">Differentiation</div>
+          <div class="score-bar-wrap"><div class="score-bar bar-low" style="width:40%"></div></div>
+          <div class="score-val" style="color:var(--red)">4</div>
+          <div class="score-rubric">Do you sound meaningfully different from incumbents? No — same vocabulary, same benefit claims, no owned narrative.</div>
+        </div>
+        <div class="score-row">
+          <div class="dim">Proof</div>
+          <div class="score-bar-wrap"><div class="score-bar bar-low" style="width:30%"></div></div>
+          <div class="score-val" style="color:var(--red)">3</div>
+          <div class="score-rubric">Do you show evidence that matches your promise? Minimal — generic social proof exists but doesn't support the core claim.</div>
+        </div>
+        <div class="score-row">
+          <div class="dim">Friction</div>
+          <div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div>
+          <div class="score-val" style="color:var(--green)">7</div>
+          <div class="score-rubric">How easy is it to try or say yes? Good — clear CTA, freemium or trial exists, signup flow is fast.</div>
+        </div>
+        <div class="score-row">
+          <div class="dim">Funnel alignment</div>
+          <div class="score-bar-wrap"><div class="score-bar bar-mid" style="width:60%"></div></div>
+          <div class="score-val" style="color:var(--yellow)">6</div>
+          <div class="score-rubric">Does the CTA match where buyers are in their journey? Partial — CTA pushes "try free" but doesn't address awareness-stage objections before asking for action.</div>
+        </div>
+      </div>
+
+      <div class="score-fix-note">
+        <strong>What to fix first:</strong> Differentiation (4/10) and Proof (3/10) are the constraint — everything else is secondary. These two scores explain why you're getting compared on price or defaulted to the incumbent.
+      </div>
+    </div>
+
+    <!-- §3 Competitor Message Map -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <div>
+          <div class="section-title">Competitor Message Map</div>
+          <div class="section-subtitle">5 competitors analyzed — real quotes from live homepages</div>
+        </div>
+      </div>
+
+      <div class="note-banner">
+        In the paid audit, this table includes a screenshot of each competitor's hero section so you see exactly what a prospect sees when they open the next tab. Screenshots removed from this redacted sample.
+      </div>
+
+      <div class="comp-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Competitor</th>
+              <th>Narrative anchor</th>
+              <th>Hero claim (verbatim)</th>
+              <th>Implied buyer</th>
+              <th>Proof type used</th>
+              <th>Risk to you</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="comp-name">Loom</div>
+                <div class="comp-narrative">Screen recorder + video messaging</div>
+              </td>
+              <td>Productivity shortcut — one video beats a thousand words</td>
+              <td class="comp-quote">"One video is worth a thousand words"</td>
+              <td>All knowledge workers — broad</td>
+              <td>Brand trust, logo wall, "200M+ videos"</td>
+              <td><span class="comp-risk">Household name default. Generic positioning = Loom comparison.</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="comp-name">Vidyard</div>
+                <div class="comp-narrative">Video for revenue teams / sales</div>
+              </td>
+              <td>Revenue outcome — sellers win more deals</td>
+              <td class="comp-quote">"Sellers win more deals with Vidyard"</td>
+              <td>Sales teams, AEs, SDRs</td>
+              <td>Pipeline data, customer revenue stats</td>
+              <td><span class="comp-risk">Owns the sales lane. Don't compete here without revenue proof.</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="comp-name">Zight</div>
+                <div class="comp-narrative">Record + share + AI-structured output</div>
+              </td>
+              <td>Full workflow — record once, get structured content</td>
+              <td class="comp-quote">"One tool to record, share, and explain your work so your team stays aligned and moves faster"</td>
+              <td>Teams shipping iteratively</td>
+              <td>Feature bundling, AI output examples</td>
+              <td><span class="comp-risk">Bundles "record → structured output." If you don't address this, you look dated.</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="comp-name">Vimeo</div>
+                <div class="comp-narrative">Enterprise video platform</div>
+              </td>
+              <td>Complete platform — host, manage, control at scale</td>
+              <td class="comp-quote">"Your complete video platform"</td>
+              <td>Enterprise, brand/marketing teams</td>
+              <td>SOC2, enterprise logos, SLA language</td>
+              <td><span class="comp-risk">Beats you on enterprise trust. Avoid "platform" positioning.</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="comp-name">Bubbles</div>
+                <div class="comp-narrative">AI meeting notes + recordings</div>
+              </td>
+              <td>Automate meeting capture — notetaker joins, summarizes</td>
+              <td class="comp-quote">"Notetaker automatically joins your meetings to securely record, transcribe, and take notes"</td>
+              <td>Meeting-heavy teams, ops, PMs</td>
+              <td>AI feature screenshots, action item examples</td>
+              <td><span class="comp-risk">Owns "meeting → notes." If you sell "reduce meetings" without mechanism, you lose to them.</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="market-reality" style="margin-top:16px;">
+        <strong>Pattern across all 5:</strong> Every winning claim is outcome-anchored and proof-adjacent. "Async video for work" is not a positioning claim — it's a category label. You're currently competing in the label lane, which defaults to incumbent or price.
+      </div>
+    </div>
+
+    <!-- §4 Positioning Options -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <div>
+          <div class="section-title">Positioning Options</div>
+          <div class="section-subtitle">3 viable angles — each written in plain English with buyer, moment, promise, mechanism, and proof path</div>
+        </div>
+      </div>
+
+      <div class="options-grid">
+        <!-- Option A -->
+        <div class="option-card recommended">
+          <div class="option-header">
+            <div>
+              <div class="option-letter" style="color:#bfdbfe;">Option A</div>
+              <div class="option-title" style="color:#fff;">Unblock work without scheduling more meetings</div>
+            </div>
+            <span class="badge">Recommended</span>
+          </div>
+          <div class="option-body">
+            <div class="option-row">
+              <div class="option-key">Buyer</div>
+              <div class="option-val">PM + Eng leads managing cross-functional handoffs</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Pain trigger</div>
+              <div class="option-val">Work stalls because context is missing — threads get ambiguous, meetings add 2–3 days of latency</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Promise</div>
+              <div class="option-val"><strong>"Decisions faster. Fewer pings. Faster handoffs."</strong></div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Mechanism</div>
+              <div class="option-val">2–3 minute in-context walkthroughs + threaded decisions + searchable proof trail</div>
+            </div>
+            <div class="option-row" style="grid-column:1/-1;">
+              <div class="option-key">Proof path needed</div>
+              <div class="option-val">1-page case snippet showing before/after cycle time. Without this, the claim is unsubstantiated.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option B -->
+        <div class="option-card">
+          <div class="option-header">
+            <div class="option-letter">Option B</div>
+            <div class="option-title">Design + feedback clarity</div>
+          </div>
+          <div class="option-body">
+            <div class="option-row">
+              <div class="option-key">Buyer</div>
+              <div class="option-val">Design lead + PM</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Pain trigger</div>
+              <div class="option-val">Revision loops drag on because feedback is vague, scattered, or lost in Slack</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Promise</div>
+              <div class="option-val">"Fewer revision loops. Faster approvals."</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Note</div>
+              <div class="option-val">More crowded than Option A — Loom already plays here. Only viable with clear proof data.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option C -->
+        <div class="option-card">
+          <div class="option-header">
+            <div class="option-letter">Option C</div>
+            <div class="option-title">Onboarding + enablement efficiency</div>
+          </div>
+          <div class="option-body">
+            <div class="option-row">
+              <div class="option-key">Buyer</div>
+              <div class="option-val">Ops / Enablement / Revenue Ops</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Pain trigger</div>
+              <div class="option-val">Same questions get answered 40 times; onboarding takes too long; tribal knowledge walks out</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Promise</div>
+              <div class="option-val">"Record once. Ramp faster. Fewer repeated explanations."</div>
+            </div>
+            <div class="option-row">
+              <div class="option-key">Note</div>
+              <div class="option-val">Viable but a different buyer/channel than your current motion. Consider as a second lane, not first.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §5 Copy/Paste Assets -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <div>
+          <div class="section-title">Copy / Paste Homepage Assets</div>
+          <div class="section-subtitle">All written for Option A — use as-is or adapt</div>
+        </div>
+      </div>
+
+      <div class="asset-group">
+        <h4>Headlines (10 options)</h4>
+        <div class="headlines-grid">
+          <div class="headline-item"><div class="hn">H1</div>Unblock work without scheduling another meeting.</div>
+          <div class="headline-item"><div class="hn">H2</div>Turn blockers into decisions in minutes.</div>
+          <div class="headline-item"><div class="hn">H3</div>Replace ambiguous threads with in-context walkthroughs.</div>
+          <div class="headline-item"><div class="hn">H4</div>Faster handoffs across PM, Eng, and Design.</div>
+          <div class="headline-item"><div class="hn">H5</div>Stop losing days to meeting latency.</div>
+          <div class="headline-item"><div class="hn">H6</div>Make progress while calendars stay full.</div>
+          <div class="headline-item"><div class="hn">H7</div>Clear context. Faster decisions. Less ping-pong.</div>
+          <div class="headline-item"><div class="hn">H8</div>Unblock projects with 2-minute walkthroughs.</div>
+          <div class="headline-item"><div class="hn">H9</div>Cut review cycles with async clarity.</div>
+          <div class="headline-item"><div class="hn">H10</div>Get the decision without the sync.</div>
+        </div>
+      </div>
+
+      <div class="asset-group">
+        <h4>Subheadlines (5 options)</h4>
+        <div class="subhead-list">
+          <div class="subhead-item">When context is the blocker, text creates back-and-forth. Short walkthroughs create decisions.</div>
+          <div class="subhead-item">Capture the what, why, and next once — so teammates can act without waiting for a meeting slot.</div>
+          <div class="subhead-item">Best for teams shipping weekly where a 2-day meeting delay is a 2-day slip.</div>
+          <div class="subhead-item">Works inside your existing workflow. Start with one use case: blocked handoffs.</div>
+          <div class="subhead-item">Add proof that it works and you'll win against "we already have Teams."</div>
+        </div>
+      </div>
+
+      <div class="asset-group">
+        <h4>CTAs (3 options)</h4>
+        <div class="cta-list">
+          <div class="cta-item"><span>See the unblock workflow</span><span class="cta-tag">Low friction — show don't sell</span></div>
+          <div class="cta-item"><span>Try a 2-minute unblock</span><span class="cta-tag">Action-oriented</span></div>
+          <div class="cta-item"><span>Create a decision thread</span><span class="cta-tag">Use-case specific</span></div>
+        </div>
+      </div>
+
+      <div class="asset-group">
+        <h4>Before / After story block</h4>
+        <div class="before-after">
+          <div class="ba-box before">
+            <div class="ba-label">Before</div>
+            <p>You wait 2–3 days for a meeting slot just to get the context you need to make a decision. Meanwhile, work sits blocked.</p>
+          </div>
+          <div class="ba-box after">
+            <div class="ba-label">After</div>
+            <p>You record a 2-minute walkthrough. Teammates respond in-thread. Decision made. Work moves — no meeting required.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §6 Objections -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <div>
+          <div class="section-title">Objection Responses</div>
+          <div class="section-subtitle">3 objections sourced from public category complaints and your site's positioning gaps</div>
+        </div>
+      </div>
+
+      <div class="objection-list">
+        <div class="objection-item">
+          <div class="obj-q"><span class="q-icon">Q</span>"We already have Teams and Zoom."</div>
+          <div class="obj-a">Teams and Zoom are for scheduled meetings. This is for <em>blocked work between meetings</em> — context gaps that create back-and-forth threads and day-long delays. They're not substitutes; you'd use both.</div>
+        </div>
+        <div class="objection-item">
+          <div class="obj-q"><span class="q-icon">Q</span>"This will be another tool nobody uses."</div>
+          <div class="obj-a">Adoption fails when tools ask teams to change everything at once. This works because you start with one moment: blocked handoffs. One workflow, one page, one short script — adoption comes from a specific problem, not a mandate.</div>
+        </div>
+        <div class="objection-item">
+          <div class="obj-q"><span class="q-icon">Q</span>"Video takes longer than just typing it."</div>
+          <div class="obj-a">Agreed — for simple questions. But when context is ambiguous, typed messages create 6–8 rounds of back-and-forth. A 2-minute walkthrough replaces the entire thread. The right tool for the right moment — not video-for-everything.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §7 14-Day Plan -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <div>
+          <div class="section-title">14-Day Implementation Plan</div>
+          <div class="section-subtitle">Prioritized so you actually ship it — most audits die in Notion</div>
+        </div>
+      </div>
+
+      <div class="plan-weeks">
+        <div class="plan-week">
+          <div class="plan-week-header">Week 1 — Positioning + Homepage</div>
+          <div class="plan-days">
+            <div class="plan-day"><span class="day-num">Day 1</span><span class="day-task">Lock Option A as your positioning choice — one-sentence promise decided</span></div>
+            <div class="plan-day"><span class="day-num">Day 2</span><span class="day-task">Replace hero headline, subhead, and CTA with Section 5 options</span></div>
+            <div class="plan-day"><span class="day-num">Day 3</span><span class="day-task">Add the Before/After block above the fold</span></div>
+            <div class="plan-day"><span class="day-num">Day 4</span><span class="day-task">Publish a workflow page: "How to unblock work without a meeting"</span></div>
+            <div class="plan-day"><span class="day-num">Day 5</span><span class="day-task">Add a comparison section: "Teams/Zoom vs [your product] — when to use which"</span></div>
+            <div class="plan-day"><span class="day-num">Day 6</span><span class="day-task">Add 3 proof bullets (even placeholders with a plan to collect the data)</span></div>
+            <div class="plan-day"><span class="day-num">Day 7</span><span class="day-task">Run a 5-person clarity test: ask strangers what the product does from the hero</span></div>
+          </div>
+        </div>
+        <div class="plan-week">
+          <div class="plan-week-header">Week 2 — Proof + Conversion</div>
+          <div class="plan-days">
+            <div class="plan-day"><span class="day-num">Day 8–9</span><span class="day-task">Create 1 before/after case snippet format — reach out to 3 customers for data</span></div>
+            <div class="plan-day"><span class="day-num">Day 10</span><span class="day-task">Ship a proof page (even if it's one case snapshot, not a full case study)</span></div>
+            <div class="plan-day"><span class="day-num">Day 11</span><span class="day-task">Add an FAQ section with Section 6 objection answers</span></div>
+            <div class="plan-day"><span class="day-num">Day 12</span><span class="day-task">Add a short demo clip showing the exact unblock workflow (60–90 sec)</span></div>
+            <div class="plan-day"><span class="day-num">Day 13</span><span class="day-task">Run 20 outbound messages using Option A positioning — measure reply rate</span></div>
+            <div class="plan-day"><span class="day-num">Day 14</span><span class="day-task">Revise copy using verbatim replies — what resonated, what missed</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §8 Done-for-you asset -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <div>
+          <div class="section-title">Done-for-You Asset</div>
+          <div class="section-subtitle">In the paid audit, you choose one: hero section, cold DM opener, or deck slide. Sample shown: homepage hero block.</div>
+        </div>
+      </div>
+
+      <div class="dfy-card">
+        <div class="dfy-header">Homepage Hero Block — Copy/Paste Ready (Option A)</div>
+        <div class="dfy-body">
+          <div class="dfy-field">
+            <div class="dfy-label">Headline</div>
+            <div class="dfy-content headline">Unblock work without scheduling another meeting.</div>
+          </div>
+          <div class="dfy-field">
+            <div class="dfy-label">Subheadline</div>
+            <div class="dfy-content">When context is the blocker, a 2-minute walkthrough beats 30 Slack messages. Decisions made. Work moves. No calendar invite needed.</div>
+          </div>
+          <div class="dfy-field">
+            <div class="dfy-label">CTA</div>
+            <div class="dfy-cta-wrap">
+              <div class="dfy-content" style="flex:1;">See the unblock workflow</div>
+              <div class="dfy-cta-pill">See the unblock workflow</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="dfy-options-note" style="margin-top:12px;">In your paid audit, the done-for-you asset is your choice: hero section rewrite, a 3-message cold DM sequence for your buyer, or a deck positioning slide with talk track.</p>
+    </div>
+
+    <!-- §9 Loom Outline -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <div>
+          <div class="section-title">Loom Walkthrough Outline</div>
+          <div class="section-subtitle">8–10 minutes — delivered with every audit so you know exactly what to do</div>
+        </div>
+      </div>
+
+      <ul class="loom-list">
+        <li><span class="ts">0:00–1:30</span><span class="desc"><strong>What's making you interchangeable today</strong> — walk through your current homepage and name the specific patterns that blur you into the category</span></li>
+        <li><span class="ts">1:30–3:30</span><span class="desc"><strong>What your competitors are actually claiming</strong> — go through the competitor map, show the narratives each one owns, and identify the open lanes</span></li>
+        <li><span class="ts">3:30–5:30</span><span class="desc"><strong>The recommended positioning option and why it wins</strong> — explain Option A, why it fits your stage, and what proof path makes it credible</span></li>
+        <li><span class="ts">5:30–7:30</span><span class="desc"><strong>The 3 changes to ship this week</strong> — specific, prioritized, no ambiguity. What to change, where, and why it matters now.</span></li>
+        <li><span class="ts">7:30–8:30</span><span class="desc"><strong>Your copy/paste hero block</strong> — read the headline, explain the logic behind each word, show how to adapt it</span></li>
+        <li><span class="ts">8:30–10:00</span><span class="desc"><strong>The 14-day plan + Q&amp;A prompts</strong> — walk through the priority order and flag the one proof asset that unlocks everything else</span></li>
+      </ul>
+
+      <div class="loom-note">
+        The Loom is not a summary of what's in the doc — it's the <em>reasoning behind it</em>. Why these competitors, why this positioning option, what to do if the recommended path doesn't fit. You can watch it once and know exactly what to do next.
+      </div>
+    </div>
+
+  </div><!-- /body-card -->
+
+  <div class="doc-footer">
+    Sample deliverable — client identity redacted. Same format, same depth, same structure as the paid $149 audit. &nbsp;·&nbsp; Generated by Alex &nbsp;·&nbsp; 2026-02-18
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
